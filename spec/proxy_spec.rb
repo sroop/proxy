@@ -22,7 +22,7 @@ describe 'Proxy' do
     expect(last_response.body).to eq("welcome")
   end
 
-  it 'does not forwards requests from hello_world page to the server' do
+  it 'does not forward requests from hello_world page to the server' do
     get('http://localhost:9000/hello_world')
     stubbed_get = stub_request(:get, 'http://localhost:4567/')
     expect(stubbed_get).to_not have_been_requested
