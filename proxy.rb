@@ -9,3 +9,11 @@ require 'uri'
 
 set :port, '9000'
 server_port = ENV['PORT'] || '4567'
+
+get '/*' do |path|
+  url = URI.parse("http://localhost:#{server_port}/")
+  client_request_to_server = Net::HTTP::Get.new(url.path)
+  server_response = Net::HTTP.start(url.host, url.port) do |http|
+    http.request(client_request_to_server)
+  end
+end
