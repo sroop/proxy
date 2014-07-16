@@ -16,4 +16,5 @@ get '/*' do |path|
   server_response = Net::HTTP.start(url.host, url.port) do |http|
     http.request(client_request_to_server)
   end
+  server_response.body
 end
