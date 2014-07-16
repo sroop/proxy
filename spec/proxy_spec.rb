@@ -10,7 +10,7 @@ describe 'Proxy' do
     Sinatra::Application
   end
   
-  it 'forwards requests to the server' do
+  it 'forwards requests from the homepage to the server' do
     get('http://localhost:9000/')
     stubbed_get = stub_request(:get, 'http://localhost:4567/')
     expect(stubbed_get).to have_been_requested
@@ -20,6 +20,24 @@ describe 'Proxy' do
     get('http://localhost:9000/')
     stubbed_get = stub_request(:get, 'http://localhost:4567/')
     expect(last_response.body).to eq("welcome")
+  end
+
+  it 'does not forwards requests from hello_world page to the server' do
+    get('http://localhost:9000/hello_world')
+    stubbed_get = stub_request(:get, 'http://localhost:4567/')
+    expect(stubbed_get).to_not have_been_requested
+  end
+
+  it 'forwards requests to the server with the api key in the headers to access hello_world' do
+    get('http://localhost:9000/hello_world')
+    stubbed_get = stub_request(:get, 'http://localhost:4567/hello_world').with(headers: {'X-Api-Key'=>'awesomeserver'} )
+    expect(stubbed_get).to have_been_requested
+  end
+
+  it 'forwards requests to the server with the api key in the url to access hello_world' do
+    get('http://localhost:9000/hello_world?api_key=awesomeserver')
+    stubbed_get = stub_request(:get, 'http://localhost:4567/hello_world').with(headers: {'X-Api-Key'=>'awesomeserver'} )
+    expect(stubbed_get).to have_been_requested
   end
 
 end
