@@ -20,7 +20,6 @@ describe 'Proxy' do
 
     it 'client requests to the proxy correctly returns the right response from the server' do
       get('http://localhost:9000/hello_world')
-      stubbed_get = stub_request(:get, 'http://localhost:4567/hello_world')
       expect(last_response.body).to eq("hello world")
     end
 
