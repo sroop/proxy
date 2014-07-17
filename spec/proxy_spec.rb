@@ -9,45 +9,31 @@ describe 'Proxy' do
   def app
     Sinatra::Application
   end
+
+  context 'The proxy forwards to the server correctly' do
   
-  # it 'forwards requests from the homepage to the server' do
-  #   get('http://localhost:9000/')
-  #   stubbed_get = stub_request(:get, 'http://localhost:4567/')
-  #   expect(stubbed_get).to have_been_requested
-  # end
+    it 'the proxy forwards client requests to the server' do
+      get('http://localhost:9000/')
+      stubbed_get = stub_request(:get, 'http://localhost:4567/')
+      expect(stubbed_get).to have_been_requested
+    end
 
-  # it 'requests to the server are correctly returned' do
-  #   get('http://localhost:9000/')
-  #   stubbed_get = stub_request(:get, 'http://localhost:4567/')
-  #   expect(last_response.body).to eq("welcome")
-  # end
+    it 'client requests to the proxy correctly returns the right response from the server' do
+      get('http://localhost:9000/hello_world')
+      stubbed_get = stub_request(:get, 'http://localhost:4567/hello_world')
+      expect(last_response.body).to eq("hello world")
+    end
 
-  # it 'does not forward requests from hello_world page to the server' do
-  #   get('http://localhost:9000/hello_world')
-  #   stubbed_get = stub_request(:get, 'http://localhost:4567/')
-  #   expect(stubbed_get).to_not have_been_requested
-  # end
+  end
 
-  # it 'forwards requests to the server with the api key in the headers to access hello_world' do
-  #   get('http://localhost:9000/hello_world')
-  #   stubbed_get = stub_request(:get, 'http://localhost:4567/hello_world').with(headers: {'X-Api-Key'=>'awesomeserver'} )
-  #   expect(stubbed_get).to have_been_requested
-  # end
+  context 'The server only responds to client requests via the proxy' do
 
-  # it 'forwards requests to the server with the api key in the url to access hello_world' do
-  #   get('http://localhost:9000/hello_world?api_key=awesomeserver')
-  #   stubbed_get = stub_request(:get, 'http://localhost:4567/hello_world').with(headers: {'X-Api-Key'=>'awesomeserver'} )
-  #   expect(stubbed_get).to have_been_requested
-  # end
-
-  context 'the servers response' do
-
-    it 'returns status code 400 when client does not request via the proxy' do
+    it 'status code 400 when client requests directly to the server' do
       get('http://localhost:4567/')
       expect(last_response.status).to eq(400)
     end
 
-    it 'returns status code 200 when the client requests via the proxy' do
+    it 'status code 200 when the client requests via the the proxy' do
       get('http://localhost:9000/')
       expect(last_response.status).to eq(200)
     end
