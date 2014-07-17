@@ -46,7 +46,12 @@ describe 'Proxy' do
       get('http://localhost:4567/')
       expect(last_response.status).to eq(400)
     end
-    
+
+    it 'returns status code 200 when the client requests via the proxy' do
+      get('http://localhost:9000/')
+      expect(last_response.status).to eq(200)
+    end
+
   end
 
 end
