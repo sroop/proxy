@@ -22,4 +22,3 @@ res = Net::HTTP.start('localhost', port) do |h|
   h.get('/hello_world', "X-API-Key" => "test:test")
 end
 puts (res.code == '200' && res.body == 'hello world') ? "OK" : "FAIL - I sent my API key as a header and you didn't let me in! :("
-
